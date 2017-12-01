@@ -1,4 +1,4 @@
-# student-of-the-game
+# Student of the Game
 
 This repository houses a set of experiments designed to extract new types of data from large sets of player statistics.
 
