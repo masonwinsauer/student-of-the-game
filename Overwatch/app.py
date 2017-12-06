@@ -1,12 +1,16 @@
 from urllib.request import Request, urlopen
-from datetime import datetime
 import urllib.parse
-from Calculators import *
-from APITools import *
-from DBTools import *
+
+from datetime import datetime
+
 import json
 import sys
 import csv
+
+from Calculators import *
+from APITools import *
+from DBTools import *
+from UserData import *
 
 #TODO: Switch to argparse
 userList = sys.argv[1]
@@ -20,10 +24,17 @@ if __name__ == "__main__":
         #print(jsonurl)
         try:
             #TODO: Define a new type for user data so we don't have to initialize an APITools object. That's just wrong.
-            userdata = APITools()
-            userdata.getDataForUser(jsonurl)
+            blob = APITools.getDataForUser(jsonurl)
+            u = UserData()
+            u.processBlob(blob)
             #Add it to the global list if they placed
-            complist.append(userdata.getCompRank())
+            cr = u.getCompRank()
+            if cr is not None:
+                complist.append(cr)
+            dist = u.getHeroDist()
+            if dist is not None:
+                std = Calculators.getHeroStd(dist[1])
+                print("Standard Deviation for Heroes: " + str(std))
         except (urllib.error.URLError, urllib.error.HTTPError):
             print("Retrieval of record for user at " + jsonurl + " failed.")
     print("AVERAGE SR: " + str(Calculators.getAvgSr(complist)) + " calculated at: " + str(datetime.now()))
