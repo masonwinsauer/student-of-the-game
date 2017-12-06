@@ -1,0 +1,2 @@
+# This will eventually detail all things needed to build
+# For now, however, all you need is to have numpy installed and to be running the OWAPI server on port 4444 
