@@ -19,10 +19,15 @@ outputFile = sys.argv[2]
 complist = []
 
 if __name__ == "__main__":
+    # For now our "DB" is just a file, but that should change soon
     conn = DBConn(outputFile)
+
+    # Loop through all users in our loaded list
     for u in APITools.loadUsersFromCsv(userList):
+
+        # Build and also encode all odd characters to a URL-safe format
         jsonurl = urllib.parse.quote("http://localhost:4444/api/v3/u/" + str(u) + "/blob", safe=':/')
-        print(u)
+        print(u.rstrip())
         try:
             # Attempt to get the JSON blob for a user
             blob = APITools.getDataForUser(jsonurl)
@@ -39,10 +44,12 @@ if __name__ == "__main__":
             # Get the hero distribution for the user
             dist = uData.getHeroDist()
             if dist is not None:
+                
                 # Calculate the standard deviation of the list
+                # Note: a std of 0.0 is a "one-trick"
                 std = Calculators.getHeroStd(dist[1])
 
-                print("\tStandard Deviation for Heroes: " + str(std))
+                print("    Standard Deviation for Heroes: " + str(std))
                 
                 conn.writeRecordToFile("User: " + u + "Hero STD: " + str(std) + "\n")
         
